@@ -11,7 +11,11 @@ These instructions will get you a copy of the project up and running on your loc
 Installing Node and NPM is pretty straightforward using the installer package available from the (Node.js® web site)[https://nodejs.org/en/].
 
 ### Configuring your project
-
+- Node.js
+```
+To this section you need Node.js Installed, if you don't have Node. 
+please follow the instructions in https://nodejs.org/en/
+```
 - Use NPM to initialize your project and create package.json to store project dependencies.
 ```
 npm init
@@ -33,11 +37,22 @@ npm install express --save
 npm install body-parser --save
 ```
 
+### Initializing Project
+
+The entry point of the application is the index.js, to initialize it you simply need to use node. 
+
+```
+node index.js
+```
+
+
 ### Endpoints
 
 - localhost:8000/block/[block_height], mapped with get, returns the block of height passed as parameter as a json.
 ```
 localhost:8000/block/0
+
+curl "localhost:8000/block/0"
 ```
 - localhost:8000/block, mapped with post, must receive a json with a property 'body' and the value must be a string.
 Returns the generated block.
@@ -49,4 +64,6 @@ body example:
 {
    "body": "Testing block with test string data"
 }
+
+curl -X "POST" "http://localhost:8000/block" -H "Content-Type: application/json" -d $'{"body": "Testing block with test string data"}' 
 ```

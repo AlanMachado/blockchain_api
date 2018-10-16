@@ -5,12 +5,11 @@ var router = express.Router();
 router.post('/', (req, res) => {
     let blockchain = new bc.Blockchain()
     if(req.body.body !== undefined && typeof req.body.body === 'string' && req.body.body.trim() !== ''){
-        res.send(req.body.body)
-        /*blockchain.addBlock(new bc.Block(req.body.body)).then(value => {
+        blockchain.addBlock(new bc.Block(req.body.body)).then(value => {
             res.send(value)
-        })*/
+        })
     }else {
-        res.send(`Json must have a body variable.`)
+        res.json(`The body key should not be empty.`)
     }
 });
 
