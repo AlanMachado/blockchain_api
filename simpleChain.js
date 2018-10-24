@@ -26,7 +26,7 @@ class Block{
 
 class Blockchain{
   constructor(){
-    this.getBlock(0).catch(reason => this.addBlock(new Block("First block in the chain - Genesis block")));
+      this.getBlock(0).catch(reason => this.addBlock(new Block("First block in the chain - Genesis block")));
   }
 
   // Add new block

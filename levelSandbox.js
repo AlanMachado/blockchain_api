@@ -26,7 +26,12 @@ module.exports = {
               if(err){
                   reject(err);
               }else {
-                resolve(JSON.parse(value));
+                  let block = JSON.parse(value)
+                  if(block.body.star !== undefined) {
+                      let s = block.body.star.story
+                      block.body.star['storyDecoded'] = Buffer.from(s, 'hex').toString('ascii')
+                  }
+                  resolve(block);
               }
 
           })
@@ -96,6 +101,47 @@ module.exports = {
                 reject(err)
             }).on('close', function () {
                 resolve(errorLog)
+            })
+        })
+    },
+
+    getBlocksByAddress: function (address) {
+        let blocks = [];
+
+        return new Promise((resolve, reject) => {
+            db.createReadStream().on('data', function (data) {
+                let block = JSON.parse(data.value)
+                if(block.body.address === address){
+                    if(block.body.star !== undefined) {
+                        let s = block.body.star.story
+                        block.body.star['storyDecoded'] = Buffer.from(s, 'hex').toString('ascii')
+                    }
+                    blocks.push(block)
+                }
+            }).on('error', function (err) {
+                reject(err)
+            }).on('close', function () {
+                resolve(blocks)
+            })
+        })
+    },
+
+    getBlockByHash: function (hash) {
+        let blockFound;
+        return new Promise((resolve, reject) => {
+            db.createReadStream().on('data', function (data) {
+                let block = JSON.parse(data.value)
+                if(block.hash === hash){
+                    if(block.body.star !== undefined) {
+                        let s = block.body.star.story
+                        block.body.star['storyDecoded'] = Buffer.from(s, 'hex').toString('ascii')
+                    }
+                    blockFound = block
+                }
+            }).on('error', function (err) {
+                reject(err)
+            }).on('close', function () {
+                resolve(blockFound)
             })
         })
     }
