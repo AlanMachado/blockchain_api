@@ -36,16 +36,21 @@ router.post('/', (req, res) => {
             res.send(err.message)
         }else {
             requestDb.getLevelDBData(req.body.address).then(requestValidation => {
-                if(uf.calculateValidationWindow(requestValidation) > 0) {
-                    let blockchain = new bc.Blockchain()
-                    req.body.star.story = Buffer.from(req.body.star.story).toString('hex')
-                    blockchain.addBlock(new bc.Block(req.body)).then(value => {
-                        requestDb.deleteData(req.body.address).then(result => {
-                            res.send(value)
+                if(requestValidation['messageSignature'] !== undefined && requestValidation['messageSignature'] === 'valid'){
+                    if(uf.calculateValidationWindow(requestValidation) > 0) {
+                        let blockchain = new bc.Blockchain()
+                        req.body.star.story = Buffer.from(req.body.star.story).toString('hex')
+                        blockchain.addBlock(new bc.Block(req.body)).then(value => {
+                            requestDb.deleteData(req.body.address).then(result => {
+                                res.send(value)
+                            })
                         })
-                    })
+                    }else {
+                        res.send(`Validation Window expired, please do another request.`)
+                    }
+
                 }else {
-                    res.send(`Validation Window expired, please do another request.`)
+                    res.send(`Signature for the address ${req.body.address} is invalid or the request was not signed.`)
                 }
 
             }, reason => {
