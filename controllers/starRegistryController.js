@@ -10,7 +10,8 @@ const schema = Joi.object().keys({
     star: Joi.object().keys({
         ra: Joi.string().required(),
         dec: Joi.string().required(),
-        mag: Joi.string().regex(/[0-9]+.[0-9]/),
+        mag: Joi.string(),
+        con: Joi.string(),
         story: Joi.string().max(500, 'ascii').required()
 
         /*ra: Joi.string().regex(/([0-9]+)h ([0-9]+)m ([0-5][0-9].[0-9])s/).required(),
